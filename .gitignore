@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+#postgresql id password
+# Local environment config
+src/main/resources/application-local.properties
+
+
