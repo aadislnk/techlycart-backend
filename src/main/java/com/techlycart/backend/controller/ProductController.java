@@ -2,6 +2,9 @@ package com.techlycart.backend.controller;
 
 import java.util.List;
 
+import com.techlycart.backend.dto.CreateProductRequest;
+import com.techlycart.backend.dto.ProductResponse;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,14 +26,25 @@ public class ProductController {
         this.productService = productService;
     }
 
+//    @GetMapping
+//    public List<Product> getAllProducts() {
+//        return productService.getAllProducts();
+//    }
+//    @PostMapping
+//    public Product createProduct(@RequestBody Product product) {
+//        return productService.createProduct(product);
+//    }
+
+    @PostMapping
+    public ProductResponse createProduct(@RequestBody CreateProductRequest request) {
+        return productService.createProduct(request);
+    }
+
     @GetMapping
-    public List<Product> getAllProducts() {
+    public List<ProductResponse> getAllProducts() {
         return productService.getAllProducts();
     }
-    @PostMapping
-    public Product createProduct(@RequestBody Product product) {
-        return productService.createProduct(product);
-    }
+
 
 }
 
