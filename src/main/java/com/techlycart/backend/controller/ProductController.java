@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.techlycart.backend.entity.Product;
 import com.techlycart.backend.service.ProductService;
 
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -23,6 +27,11 @@ public class ProductController {
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
     }
+    @PostMapping
+    public Product createProduct(@RequestBody Product product) {
+        return productService.createProduct(product);
+    }
+
 }
 
 

@@ -8,7 +8,7 @@ import com.techlycart.backend.entity.Product;
 import com.techlycart.backend.repository.ProductRepository;
 
 @Service
-public class ProductService {
+public class  ProductService {
 
     private final ProductRepository productRepository;
 
@@ -19,4 +19,9 @@ public class ProductService {
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
+
+    public Product createProduct(Product product) {
+        return productRepository.save(product);
+    }
+
 }
