@@ -59,10 +59,10 @@ public class  ProductService {
         return response;
     }
     public ProductResponse createProduct(CreateProductRequest request) {
-        Product product = new Product();
-        product.setName(request.getName());
-        product.setDescription(request.getDescription());
-        product.setPrice(request.getPrice());
+        Product product = new Product(); //rows
+        product.setName(request.getName()); //cols
+        product.setDescription(request.getDescription()); //cols
+        product.setPrice(request.getPrice()); //cols
 
         Product saved = productRepository.save(product);
         return mapToResponse(saved);
