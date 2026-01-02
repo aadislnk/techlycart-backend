@@ -2,6 +2,8 @@ package com.techlycart.backend.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.techlycart.backend.entity.Product;
@@ -67,6 +69,14 @@ public class  ProductService {
         Product saved = productRepository.save(product);
         return mapToResponse(saved);
     }
+    public Page<ProductResponse> getProducts(int page, int size) {
+
+        PageRequest pageable = PageRequest.of(page, size);
+
+        return productRepository.findAll(pageable)
+                .map(this::mapToResponse);
+    }
+
 
 
 }

@@ -6,15 +6,11 @@ import com.techlycart.backend.dto.CreateProductRequest;
 import com.techlycart.backend.dto.ProductResponse;
 
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
 
 import com.techlycart.backend.entity.Product;
 import com.techlycart.backend.service.ProductService;
-
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
@@ -41,9 +37,16 @@ public class ProductController {
         return productService.createProduct(request);
     }
 
+//    @GetMapping
+//    public List<ProductResponse> getAllProducts() {
+//        return productService.getAllProducts();
+//    }
     @GetMapping
-    public List<ProductResponse> getAllProducts() {
-        return productService.getAllProducts();
+    public Page<ProductResponse> getProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        return productService.getProducts(page, size);
     }
 
 
