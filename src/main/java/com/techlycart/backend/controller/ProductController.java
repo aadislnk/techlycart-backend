@@ -5,6 +5,7 @@ import java.util.List;
 import com.techlycart.backend.dto.CreateProductRequest;
 import com.techlycart.backend.dto.ProductResponse;
 
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,7 +37,7 @@ public class ProductController {
 //    }
 
     @PostMapping
-    public ProductResponse createProduct(@RequestBody CreateProductRequest request) {
+    public ProductResponse createProduct(@Valid @RequestBody CreateProductRequest request) {
         return productService.createProduct(request);
     }
 
