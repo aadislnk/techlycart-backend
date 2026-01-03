@@ -72,11 +72,22 @@ public class  ProductService {
     public Page<ProductResponse> getProducts(int page, int size) {
 
         PageRequest pageable = PageRequest.of(page, size);
+        //Internally, Hibernate converts this to SQL like:
+        // LIMIT size OFFSET (page * size)
+        //PageRequest is a class provided by Spring Data JPA.
 
         return productRepository.findAll(pageable)
                 .map(this::mapToResponse);
     }
 
+    public Page<ProductResponse> searchProducts(
+            String keyword, int page, int size) {
 
+        PageRequest pageable = PageRequest.of(page, size);
+
+        return productRepository
+                .findByNameContainingIgnoreCase(keyword, pageable)
+                .map(this::mapToResponse);
+    }
 
 }

@@ -41,13 +41,27 @@ public class ProductController {
 //    public List<ProductResponse> getAllProducts() {
 //        return productService.getAllProducts();
 //    }
+
+//    @GetMapping
+//    public Page<ProductResponse> getProducts(
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "5") int size) {
+//
+//        return productService.getProducts(page, size);
+//    }
     @GetMapping
     public Page<ProductResponse> getProducts(
+            @RequestParam(required = false) String search,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
 
+        if (search != null && !search.isBlank()) {
+            return productService.searchProducts(search, page, size);
+        }
+
         return productService.getProducts(page, size);
     }
+
 
 
 }
