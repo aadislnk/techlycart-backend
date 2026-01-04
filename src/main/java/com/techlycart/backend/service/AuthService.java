@@ -13,12 +13,16 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     public AuthService(UserRepository userRepository,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder passwordEncoder,
+                       JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
+
 
     public LoginResponse login(LoginRequest request) {
 
@@ -32,7 +36,14 @@ public class AuthService {
         }
 
         // TEMP: token placeholder
-        String token = "JWT_TOKEN_WILL_GO_HERE";
+       // String token = "JWT_TOKEN_WILL_GO_HERE";
+        String token = jwtService.generateToken(
+                user.getUsername(),
+                user.getRole()
+        );
+
+
+
 
         return new LoginResponse(token);
     }
