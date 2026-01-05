@@ -1,5 +1,7 @@
 package com.techlycart.backend.service;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -46,5 +48,16 @@ public class AuthService {
 
 
         return new LoginResponse(token);
+    }
+    public String extractUsername(String token) {
+        return extractAllClaims(token).getSubject();
+    }
+
+    private Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }

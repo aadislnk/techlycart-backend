@@ -2,6 +2,7 @@ package com.techlycart.backend.service;
 
 import java.util.Date;
 
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -34,5 +35,16 @@ public class JwtService {
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+    }
+    public String extractUsername(String token) {
+        return extractAllClaims(token).getSubject();
+    }
+
+    private Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }
