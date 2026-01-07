@@ -7,6 +7,7 @@ import com.techlycart.backend.dto.ProductResponse;
 
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.techlycart.backend.entity.Product;
@@ -32,6 +33,7 @@ public class ProductController {
 //        return productService.createProduct(product);
 //    }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ProductResponse createProduct(@Valid @RequestBody CreateProductRequest request) {
         return productService.createProduct(request);
