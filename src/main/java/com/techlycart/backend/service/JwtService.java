@@ -2,15 +2,15 @@ package com.techlycart.backend.service;
 
 import java.util.Date;
 
-import io.jsonwebtoken.Claims;
+import javax.crypto.SecretKey;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-
-import javax.crypto.SecretKey;
 
 @Service
 public class JwtService {
@@ -36,6 +36,7 @@ public class JwtService {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
+
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
     }
