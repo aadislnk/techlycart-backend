@@ -45,9 +45,9 @@ public class  ProductService {
 //        product.setPrice(request.getPrice());
 //
 //        return productRepository.save(product);
-//    } //-----> Yes, it’s manual.
-    //Yes, it’s repetitive.
-    //That’s intentional,you must understand mapping before automating.
+//    } //----->  it’s manual.
+    // it’s repetitive.
+    //That’s intentional,i must understand mapping before automating.
 
     //entity------->DTO conversion:
     private ProductResponse mapToResponse(Product product) {
