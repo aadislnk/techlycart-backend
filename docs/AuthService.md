@@ -11,7 +11,7 @@ UserRepository allows us to perform read/write actions on user entity (user tabl
 PasswordEncoder help us in passwords ko secure tareeke se hash aur verify karne me.
 JwtService JWT token banane aur samajhne ka kaam karta hai.
 ---
-as we know login method request dto leti hai as argument adnd it returns response dto,
+as we know login method request dto leti hai as argument and it returns response dto,
 User user = userRepository.findByUsername(request.getUsername())
 .orElseThrow(() -> new RuntimeException("Invalid credentials"));
 

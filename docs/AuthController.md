@@ -26,7 +26,7 @@ private final AuthService authService;
     public AuthController(AuthService authService) {
         this.authService = authService; 
     }
-It Dependency Injection (constructor injection)
+Its Dependency Injection (constructor injection)
 AuthController will use authService (authService obj is injected by spring while creating obj of AuthCont)
 ---
 @PostMapping("/login")

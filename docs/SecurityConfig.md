@@ -22,6 +22,7 @@ kyunki Spring already sab objects bana ke rakhta hai.
 ->SecurityConfig ke paas ek dependency hai
 Is dependency ka type JwtAuthFilter hai
 Ye object SecurityConfig ke andar use hoga
+This what dependency injection is .
 ---
 @Bean :
 bolta hai Spring ko:

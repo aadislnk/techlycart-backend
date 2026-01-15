@@ -7,7 +7,7 @@ controllers, services, repositories ko memory me load kiya
 embedded Tomcat start kiya (port 8080)
 -->Ab app requests receive karne ke liye ready hai
 
-so abhi hmare app me do flow hai : login,product creation(admin), product access (user/admin)
+so abhi hmare app me do flow hai : login(authentication),product creation(admin), product access (user/admin).
 
 ------------------------------------------------------------------------------------------------
 **Login Ki Kahani(Authentication flow) :**
@@ -495,3 +495,15 @@ EXCEPTION FLOW (ANYWHERE)
 └─ @ExceptionHandler
 └─ Error JSON
 └─ Client
+-------------------------------------------------------------------------------------------------------------
+#cart,cartitem entity,repo,service
+@OneToOne
+@JoinColumn(name = "user_id",nullable = false)
+private User user;
+
+
+@OneToMany(mappedBy = "cart",
+cascade = CascadeType.ALL,orphanRemoval = true)
+private List<CartItem> items = new ArrayList<>();
+
+@Transactional
