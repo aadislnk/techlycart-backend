@@ -32,17 +32,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain)
             throws ServletException, IOException {
-        System.out.println("JwtAuthFilter HIT");
 
-
-        String authHeader = request.getHeader("Authorization");
-
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (request.getServletPath().startsWith("/api/auth")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = authHeader.substring(7); //skip Bearer_
+
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader == null || !authHeader.toLowerCase().startsWith("bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+
+        String token = authHeader.substring(7).trim();
         String username = jwtService.extractUsername(token);
 
         if (username != null &&
@@ -51,7 +56,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             String role = jwtService.extractRole(token);
 
             List<SimpleGrantedAuthority> authorities =
-                    List.of(new SimpleGrantedAuthority(role));
+                    List.of(new SimpleGrantedAuthority("ROLE_" + role));
+
 
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
