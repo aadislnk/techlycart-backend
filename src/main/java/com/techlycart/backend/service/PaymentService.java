@@ -30,34 +30,42 @@ public class PaymentService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        // idempotency
-        Payment existingPayment =
-                paymentRepository.findByOrder(order).orElse(null);
+        Payment payment = paymentRepository.findByOrder(order).orElse(null);
 
-        if (existingPayment != null) {
-            return mapToPaymentResponse(existingPayment);
+        // Case 1: Already paid → idempotent
+        if (payment != null && payment.getStatus() == PaymentStatus.SUCCESS) {
+            return mapToPaymentResponse(payment);
         }
 
-        Payment payment = new Payment();
-        payment.setOrder(order);
-        payment.setAmount(order.getTotalAmount());
-        payment.setPaymentDate(LocalDateTime.now());
-        payment.setStatus(PaymentStatus.INITIATED);
-
-        boolean success = new Random().nextBoolean();
-
-        if (success) {
+        //  Case 2: Failed earlier → retry allowed
+        if (payment != null && payment.getStatus() == PaymentStatus.FAILED) {
             payment.setStatus(PaymentStatus.SUCCESS);
+            payment.setPaymentDate(LocalDateTime.now());
+
             order.setStatus(OrderStatus.PAID);
-        } else {
-            payment.setStatus(PaymentStatus.FAILED);
+
+            paymentRepository.save(payment);
+            orderRepository.save(order);
+
+            return mapToPaymentResponse(payment);
         }
 
-        paymentRepository.save(payment);
+        //  Case 3: First payment attempt
+        Payment newPayment = new Payment();
+        newPayment.setOrder(order);
+        newPayment.setAmount(order.getTotalAmount());
+        newPayment.setPaymentDate(LocalDateTime.now());
+        newPayment.setStatus(PaymentStatus.SUCCESS);
+
+        order.setStatus(OrderStatus.PAID);
+
+        paymentRepository.save(newPayment);
         orderRepository.save(order);
 
-        return mapToPaymentResponse(payment);
+        return mapToPaymentResponse(newPayment);
     }
+
+
 
     public PaymentResponse getPaymentStatus(Long orderId) {
         Order order = orderRepository.findById(orderId)

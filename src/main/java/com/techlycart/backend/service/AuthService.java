@@ -1,5 +1,6 @@
 package com.techlycart.backend.service;
 
+import com.techlycart.backend.dto.RegisterRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,25 @@ public class AuthService {
                 user.getRole()
         );
 
+        return new LoginResponse(token);
+    }
+    public LoginResponse register(RegisterRequest request) {
+
+        // Check if username already exists
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+            throw new RuntimeException("Username already exists");
+        }
+
+        // Create new user
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(request.getRole().equalsIgnoreCase("ADMIN") ? "ADMIN" : "USER");
+
+        userRepository.save(user);
+
+        // Generate token and return
+        String token = jwtService.generateToken(user.getUsername(), user.getRole());
         return new LoginResponse(token);
     }
 }
