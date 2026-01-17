@@ -24,6 +24,7 @@ public class PaymentService {
         this.paymentRepository = paymentRepository;
         this.orderRepository = orderRepository;
     }
+
     @Transactional
     public PaymentResponse pay(Long orderId) {
 
@@ -37,12 +38,18 @@ public class PaymentService {
             return mapToPaymentResponse(payment);
         }
 
-        //  Case 2: Failed earlier → retry allowed
+        // Case 2: Failed earlier → retry allowed with 90% success rate
         if (payment != null && payment.getStatus() == PaymentStatus.FAILED) {
-            payment.setStatus(PaymentStatus.SUCCESS);
-            payment.setPaymentDate(LocalDateTime.now());
+            boolean success = new Random().nextInt(100) < 90; // 90% success
 
-            order.setStatus(OrderStatus.PAID);
+            if (success) {
+                payment.setStatus(PaymentStatus.SUCCESS);
+                payment.setPaymentDate(LocalDateTime.now());
+                order.setStatus(OrderStatus.PAID);
+            } else {
+                payment.setPaymentDate(LocalDateTime.now());
+                // Keep status as FAILED
+            }
 
             paymentRepository.save(payment);
             orderRepository.save(order);
@@ -50,22 +57,27 @@ public class PaymentService {
             return mapToPaymentResponse(payment);
         }
 
-        //  Case 3: First payment attempt
+        // Case 3: First payment attempt - 90% success rate
+        boolean success = new Random().nextInt(100) < 90; // 90% success
+
         Payment newPayment = new Payment();
         newPayment.setOrder(order);
         newPayment.setAmount(order.getTotalAmount());
         newPayment.setPaymentDate(LocalDateTime.now());
-        newPayment.setStatus(PaymentStatus.SUCCESS);
 
-        order.setStatus(OrderStatus.PAID);
+        if (success) {
+            newPayment.setStatus(PaymentStatus.SUCCESS);
+            order.setStatus(OrderStatus.PAID);
+        } else {
+            newPayment.setStatus(PaymentStatus.FAILED);
+            // Order status remains PLACED
+        }
 
         paymentRepository.save(newPayment);
         orderRepository.save(order);
 
         return mapToPaymentResponse(newPayment);
     }
-
-
 
     public PaymentResponse getPaymentStatus(Long orderId) {
         Order order = orderRepository.findById(orderId)
@@ -86,6 +98,4 @@ public class PaymentService {
                 payment.getPaymentDate()
         );
     }
-
-
 }
