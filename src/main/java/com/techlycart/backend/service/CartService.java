@@ -35,11 +35,7 @@ public class CartService {
         this.userRepository = userRepository;
     }
 
-    /**
-     * Add product to user's cart.
-     * If cart does not exist, create it.
-     * If product already exists in cart, increase quantity.
-     */
+  
     public void addProductToCart(String username, Long productId) {
 
         User user = userRepository.findByUsername(username)
@@ -73,10 +69,7 @@ public class CartService {
         cartRepository.save(cart);
     }
 
-    /**
-     * Get user's cart.
-     * Cart may not exist yet.
-     */
+
     public Cart getCart(String username) {
 
         User user = userRepository.findByUsername(username)
@@ -85,10 +78,7 @@ public class CartService {
         return cartRepository.findByUser(user).orElse(null);
     }
 
-    /**
-     * Update quantity of a product in cart.
-     * If quantity <= 0, item is removed.
-     */
+
     public void updateQuantity(String username, Long productId, int quantity) {
 
         User user = userRepository.findByUsername(username)
@@ -113,9 +103,7 @@ public class CartService {
         cartRepository.save(cart);
     }
 
-    /**
-     * Remove product completely from cart.
-     */
+
     public void removeItem(String username, Long productId) {
 
         User user = userRepository.findByUsername(username)
